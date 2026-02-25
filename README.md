@@ -59,14 +59,28 @@ See [`.env.example`](.env.example) for the full template.
 | `PORT` | No | `3000` | Server port |
 | `DEFAULT_LLM_PROVIDER` | No | `openai` | `openai` \| `google_genai` \| `anthropic` |
 | `MODEL_NAME` | No | `gpt-4o-mini` | Model to use for the chosen provider |
+| `SUPPORTED_LLM_PROVIDERS` | No | `["openai"]` | JSON array of providers to register |
 | `OPENAI_API_KEY` | If provider = openai | — | Your OpenAI API key |
 | `OPENAI_BASE_URL` | No | `https://api.openai.com/v1` | Custom OpenAI-compatible endpoint |
-| `GOOGLE_API_KEY` | If provider = google_genai | — | Google Gemini API key |
-| `MODEL_PROJECT_ID` | If using Vertex AI | — | GCP project ID |
+| `GOOGLE_API_KEY` | If using Google API key auth | — | Google Gemini API key |
+| `MODEL_PROJECT_ID` | If using Vertex AI (ADC or SA) | — | GCP project ID |
 | `MODEL_LOCATION` | No | `us-central1` | GCP region |
-| `MODEL_SERVICE_ACCOUNT_JSON` | If using Vertex AI | — | Service account JSON string |
+| `MODEL_SERVICE_ACCOUNT_JSON` | If using Vertex AI + SA JSON | — | Service account JSON string |
 | `ANTHROPIC_API_KEY` | If provider = anthropic | — | Your Anthropic API key |
 | `LOG_LEVEL` | No | `INFO` | `INFO` or `DEBUG` |
+
+### Google GenAI / Vertex AI — Auth Modes
+
+The Google adapter (following the ADT pattern) supports **3 auth modes**:
+
+| Mode | Env vars needed | Best for |
+|------|----------------|----------|
+| **ADC** (Application Default Credentials) | `MODEL_PROJECT_ID` | GCP VMs, GKE, Cloud Run, or local with `gcloud auth` |
+| **Service Account JSON** | `MODEL_PROJECT_ID` + `MODEL_SERVICE_ACCOUNT_JSON` | CI/CD, non-GCP servers |
+| **API Key** | `GOOGLE_API_KEY` | Quick local dev (not Vertex AI) |
+
+**On GCP** (GCE, GKE, Cloud Run): only `MODEL_PROJECT_ID` is needed — ADC is automatic.  
+**Off GCP**: run `gcloud auth application-default login` first, then only `MODEL_PROJECT_ID` is needed.
 
 ---
 

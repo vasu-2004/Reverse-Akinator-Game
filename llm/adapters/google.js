@@ -30,7 +30,10 @@ class GoogleGenAIAdapter extends BaseLLMAdapter {
     this._projectId = (projectId || "").trim();
     this._location = (location || "us-central1").trim();
 
-    // Determine auth mode
+    // Determine auth mode — mirrors ADT's GoogleGenAIAdapter:
+    //   1. API key           → @google/generative-ai
+    //   2. SA JSON + Project  → @google-cloud/vertexai with explicit creds
+    //   3. Project ID only    → @google-cloud/vertexai with ADC (no keys needed on GCP)
     if (this._apiKey) {
       this._mode = "apikey";
       const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -52,11 +55,23 @@ class GoogleGenAIAdapter extends BaseLLMAdapter {
         location: this._location,
         googleAuthOptions: { credentials },
       });
-      console.log(`     → Google GenAI adapter using Vertex AI (project=${this._projectId}, location=${this._location})`);
+      console.log(`     → Google GenAI adapter using Vertex AI + service account (project=${this._projectId}, location=${this._location})`);
+    } else if (this._projectId) {
+      // ADC mode — Application Default Credentials (no keys needed on GCP)
+      // Mirrors ADT's google_genai.py: when only project_id is provided,
+      // the SDK uses ADC from the environment (GCE metadata, Workload Identity,
+      // or local `gcloud auth application-default login`).
+      this._mode = "vertexai";
+      const { VertexAI } = require("@google-cloud/vertexai");
+      this._vertexAI = new VertexAI({
+        project: this._projectId,
+        location: this._location,
+      });
+      console.log(`     → Google GenAI adapter using Vertex AI + ADC (project=${this._projectId}, location=${this._location})`);
     } else {
       throw new Error(
-        "GoogleGenAIAdapter requires either GOOGLE_API_KEY or " +
-        "MODEL_SERVICE_ACCOUNT_JSON + MODEL_PROJECT_ID."
+        "GoogleGenAIAdapter requires GOOGLE_API_KEY, or MODEL_PROJECT_ID " +
+        "(+ optional MODEL_SERVICE_ACCOUNT_JSON). On GCP, only MODEL_PROJECT_ID is needed."
       );
     }
   }

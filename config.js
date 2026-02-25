@@ -82,9 +82,11 @@ function validateConfig() {
       break;
     case LLMProvider.GOOGLE_GENAI: {
       const hasApiKey = !placeholder(config.googleApiKey);
-      const hasServiceAccount = config.modelServiceAccountJson && config.modelProjectId;
-      if (!hasApiKey && !hasServiceAccount)
-        return { valid: false, error: "Google GenAI requires either GOOGLE_API_KEY or MODEL_SERVICE_ACCOUNT_JSON + MODEL_PROJECT_ID. Add them to your .env file." };
+      const hasProjectId = !!config.modelProjectId;
+      const hasServiceAccount = !!config.modelServiceAccountJson && hasProjectId;
+      // ADC mode: only MODEL_PROJECT_ID is needed (on GCP or with gcloud auth)
+      if (!hasApiKey && !hasProjectId)
+        return { valid: false, error: "Google GenAI requires GOOGLE_API_KEY or MODEL_PROJECT_ID (+ optional MODEL_SERVICE_ACCOUNT_JSON). On GCP, only MODEL_PROJECT_ID is needed." };
       break;
     }
     case LLMProvider.ANTHROPIC:
