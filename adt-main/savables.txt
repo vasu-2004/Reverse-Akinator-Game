@@ -1,0 +1,4 @@
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIAM64h/3ou+OWTs48q3eJs8MzGAIPLKAzEkeRvhDmtz sudhanandas@opentext.com
+
+$env:MODEL_PROJECT_ID="otl-nb-mind-share"
+python tutorials\guardrails\app\main.py

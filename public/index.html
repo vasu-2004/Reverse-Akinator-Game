@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎭 Reverse Akinator</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+      <h1 class="title">
+        <span class="title-emoji">🎭</span>
+        REVERSE AKINATOR
+      </h1>
+      <p class="subtitle">I know who I am &hellip; Can <em>you</em> figure it out?</p>
+
+      <div class="difficulty-selector">
+        <span class="diff-label">Difficulty:</span>
+        <button class="diff-btn" data-diff="easy">Easy&nbsp;(20)</button>
+        <button class="diff-btn active" data-diff="medium">Medium&nbsp;(15)</button>
+        <button class="diff-btn" data-diff="hard">Hard&nbsp;(10)</button>
+      </div>
+    </header>
+
+    <!-- ==================== TAB BAR ==================== -->
+    <nav class="tab-bar" id="tabBar">
+      <!-- Tabs injected by JavaScript -->
+    </nav>
+
+    <!-- ==================== GAME AREA ==================== -->
+    <main class="game-area" id="gameArea">
+      <!-- Welcome screen (visible until a tab is chosen) -->
+      <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-content">
+          <div class="welcome-icon">🎭</div>
+          <h2>Welcome, Detective!</h2>
+          <p>Pick one of the mystery tabs above to begin.</p>
+          <p>Each tab hides a different character. Can you guess who they are?</p>
+
+          <div class="how-to-play">
+            <h3>How to Play</h3>
+            <ol>
+              <li>🎯 Click a mystery tab to start a session</li>
+              <li>❓ Ask yes / no questions to narrow it down</li>
+              <li>🧠 The AI answers: <strong>Yes</strong>, <strong>No</strong>, <strong>Sometimes</strong>, or <strong>Partially</strong></li>
+              <li>💡 Ready? Type a name and hit <strong>Guess</strong>!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat interface (shown when a tab is active) -->
+      <div class="chat-interface hidden" id="chatInterface">
+        <!-- Status bar -->
+        <div class="status-bar">
+          <div class="question-counter">
+            <span class="counter-icon">🔍</span>
+            <span id="questionCount">0</span> / <span id="questionMax">15</span>
+            <span class="counter-text">questions used</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages">
+          <!-- Injected by JavaScript -->
+        </div>
+
+        <!-- Game-over overlay (initially hidden) -->
+        <div class="game-over-overlay hidden" id="gameOverOverlay">
+          <div class="game-over-card" id="gameOverCard">
+            <!-- Filled by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="input-area" id="inputArea">
+          <input
+            type="text"
+            id="userInput"
+            placeholder="Ask a yes/no question…"
+            autocomplete="off"
+          />
+          <button class="btn btn-ask" id="btnAsk" title="Ask Question (Enter)">
+            Ask&nbsp;🔍
+          </button>
+          <button class="btn btn-guess" id="btnGuess" title="Make a Guess (Shift+Enter)">
+            Guess&nbsp;🎯
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Confetti canvas (for win animation) -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>
